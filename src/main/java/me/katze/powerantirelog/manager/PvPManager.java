@@ -55,12 +55,19 @@ public class PvPManager {
 
         if (pvpMap.containsKey(name)) {
             pvpMap.replace(name, pvpMap.get(name), time);
+            if (AntiRelog.getInstance().getScoreboardManager() != null) {
+                AntiRelog.getInstance().getScoreboardManager().update(player, time);
+            }
         } else {
             player.sendMessage(
                     StringUtility.getMessage(AntiRelog.getInstance().getConfig().getString("messages.start")));
             sendCommands(true, player);
             disable(player);
             pvpMap.put(name, time);
+            if (AntiRelog.getInstance().getScoreboardManager() != null) {
+                AntiRelog.getInstance().getScoreboardManager().handleStart(player);
+                AntiRelog.getInstance().getScoreboardManager().update(player, time);
+            }
         }
     }
 
@@ -68,6 +75,10 @@ public class PvPManager {
         pvpMap.remove(player.getName());
 
         CooldownManager.removePlayer(player);
+
+        if (AntiRelog.getInstance().getScoreboardManager() != null) {
+            AntiRelog.getInstance().getScoreboardManager().clear(player);
+        }
     }
 
     public static boolean isPvP(Player player) {
@@ -173,10 +184,17 @@ public class PvPManager {
                     player.sendMessage(
                             StringUtility.getMessage(AntiRelog.getInstance().getConfig().getString("messages.end")));
                     sendCommands(false, player);
+                    if (AntiRelog.getInstance().getScoreboardManager() != null) {
+                        AntiRelog.getInstance().getScoreboardManager().clear(player);
+                    }
                 }
             } else {
                 pvpMap.replace(name, time);
                 BossBarUtility.setTemporarily(name, time);
+                Player player = Bukkit.getPlayer(name);
+                if (player != null && AntiRelog.getInstance().getScoreboardManager() != null) {
+                    AntiRelog.getInstance().getScoreboardManager().update(player, time);
+                }
             }
         }
     }
@@ -189,6 +207,10 @@ public class PvPManager {
         }
 
         CooldownManager.removePlayer(player);
+
+        if (AntiRelog.getInstance().getScoreboardManager() != null) {
+            AntiRelog.getInstance().getScoreboardManager().clear(player);
+        }
     }
 
     private static void sendCommands(boolean start, Player player) {

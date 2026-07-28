@@ -7,6 +7,7 @@ import me.katze.powerantirelog.command.TestCommand;
 import me.katze.powerantirelog.listener.*;
 import me.katze.powerantirelog.manager.CooldownManager;
 import me.katze.powerantirelog.manager.PvPManager;
+import me.katze.powerantirelog.manager.PvPScoreboardManager;
 import me.katze.powerantirelog.utility.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +26,7 @@ public final class AntiRelog extends JavaPlugin {
     private static AntiRelog instance;
     public PvPManager pvpmanager;
     public CooldownManager cooldownManager;
+    public PvPScoreboardManager scoreboardManager;
 
     @Override
     public void onEnable() {
@@ -41,12 +43,16 @@ public final class AntiRelog extends JavaPlugin {
         loadListeners();
         loadCommands();
 
+        scoreboardManager = new PvPScoreboardManager(this);
         pvpmanager = new PvPManager();
         cooldownManager = new CooldownManager();
     }
 
     @Override
     public void onDisable() {
+        if (scoreboardManager != null) {
+            scoreboardManager.clearAll();
+        }
     }
 
     private void loadCommands() {
@@ -90,5 +96,9 @@ public final class AntiRelog extends JavaPlugin {
 
     public static AntiRelog getInstance() {
         return instance;
+    }
+
+    public PvPScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
     }
 }

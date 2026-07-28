@@ -1,5 +1,6 @@
 package me.katze.powerantirelog.listener;
 
+import me.katze.powerantirelog.AntiRelog;
 import me.katze.powerantirelog.manager.PvPManager;
 import me.katze.powerantirelog.utility.PlayerUtility;
 import org.bukkit.entity.LivingEntity;
@@ -27,6 +28,9 @@ public class DamageListener implements Listener {
 
         PvPManager.addPlayer(target);
         PvPManager.addPlayer(damager);
+
+        updateScoreboard(target, damager);
+        updateScoreboard(damager, target);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -42,6 +46,9 @@ public class DamageListener implements Listener {
 
         PvPManager.addPlayer(target);
         PvPManager.addPlayer(damager);
+
+        updateScoreboard(target, damager);
+        updateScoreboard(damager, target);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -59,8 +66,18 @@ public class DamageListener implements Listener {
 
                     PvPManager.addPlayer(damager);
                     PvPManager.addPlayer((Player) target);
+
+                    updateScoreboard((Player) target, damager);
+                    updateScoreboard(damager, (Player) target);
                 }
             }
         }
+    }
+
+    private void updateScoreboard(Player victim, Player attacker) {
+        if (victim == null || attacker == null) return;
+        if (AntiRelog.getInstance().getScoreboardManager() == null) return;
+
+        AntiRelog.getInstance().getScoreboardManager().setAttacker(victim, attacker);
     }
 }

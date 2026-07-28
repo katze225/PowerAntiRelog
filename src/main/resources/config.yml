@@ -12,6 +12,15 @@ settings:
     # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
     style: SOLID
 
+  scoreboard:
+    enabled: false
+    title: "§x§E§3§2§6§3§6PvP §fИнформация"
+    # Доступные заполнители: {attacker}, {attacker_health}, {time}
+    lines:
+      - "§x§E§3§2§6§3§6&l| &fНапал: &f{attacker}"
+      - "§x§E§3§2§6§3§6&l| &fHP: &f{attacker_health}"
+      - "§x§E§3§2§6§3§6&l| &fДо конца: &f{time} сек"
+
   leave:
     kill: true
     # null или [] чтобы отключить
