@@ -47,6 +47,20 @@ settings:
     chorus: 0
     firework: 0
     totem: 0
+    trident: 0
+    crossbow: 0
+    wind-charge: 0
+
+  # Shield break settings with an axe
+  shield-break:
+    # Allow breaking/disabling shields with an axe
+    enabled: true
+    # Only work when players are in PvP mode
+    pvp-only: true
+    # Cooldown duration for shield after being broken with an axe (in seconds)
+    cooldown: 5
+    # Play shield break sound
+    sound: true
 
   # Only works if cancel.command is true
   command-whitelist:
@@ -66,6 +80,9 @@ messages:
   end: "§x§E§3§2§6§3§6&l| &aYou are no longer in combat."
   block: "§x§E§3§2§6§3§6&l| &cYou can't do this in PvP mode!"
   cooldown: "§x§E§3§2§6§3§6&l| &fWait §x§E§3§2§6§3§6{time}, &fto use this item!"
+  shield-broken: "§x§E§3§2§6§3§6&l| &fYour shield was broken by §x§E§3§2§6§3§6{player}&f!"
+  shield-broken-attacker: "§x§E§3§2§6§3§6&l| &fYou broke the shield of §x§E§3§2§6§3§6{player}&f!"
+  shield-broken-subtitle: "&fShield disabled for §x§E§3§2§6§3§6{time} &fsec."
 
   help:
     - "&r"

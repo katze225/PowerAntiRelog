@@ -48,6 +48,20 @@ settings:
     chorus: 0
     firework: 0
     totem: 0
+    trident: 0
+    crossbow: 0
+    wind-charge: 0
+
+  # Настройки пробития щита топором
+  shield-break:
+    # Разрешить пробивать/ломать щит топором
+    enabled: true
+    # Работать только если игроки находятся в режиме PvP
+    pvp-only: true
+    # Длительность перезарядки щита после пробития топором (в секундах)
+    cooldown: 5
+    # Воспроизводить звук сломания щита
+    sound: true
 
   # Работает только если cancel.command ровно true
   command-whitelist:
@@ -67,6 +81,9 @@ messages:
   end: "§x§E§3§2§6§3§6&l| &aВы больше не находитесь в бою."
   block: "§x§E§3§2§6§3§6&l| &cВы не можете делать это в режиме PvP!"
   cooldown: "§x§E§3§2§6§3§6&l| &fПодождите §x§E§3§2§6§3§6{time}, &fчтобы использовать этот предмет!"
+  shield-broken: "§x§E§3§2§6§3§6&l| &fВаш щит был сломан игроком §x§E§3§2§6§3§6{player}&f!"
+  shield-broken-attacker: "§x§E§3§2§6§3§6&l| &fВы сломали щит игрока §x§E§3§2§6§3§6{player}&f!"
+  shield-broken-subtitle: "&fЩит заблокирован на §x§E§3§2§6§3§6{time} &fсек."
 
   help:
     - "&r"
