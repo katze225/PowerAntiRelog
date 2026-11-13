@@ -51,6 +51,17 @@ public class CooldownManager {
         cooldownMap.remove(player.getName());
     }
 
+    public static void removeCooldown(Player player, Material material) {
+        if (material == null || player == null) return;
+        List<CooldownData> list = cooldownMap.get(player.getName());
+        if (list != null) {
+            list.removeIf(data -> material.name().equals(data.getItem()));
+            if (list.isEmpty()) {
+                cooldownMap.remove(player.getName());
+            }
+        }
+    }
+
     public static void clearMap() {
         cooldownMap.clear();
     }

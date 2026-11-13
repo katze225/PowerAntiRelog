@@ -1,6 +1,7 @@
 package me.katze.powerantirelog.listener;
 
 import me.katze.powerantirelog.AntiRelog;
+import me.katze.powerantirelog.manager.NewbieManager;
 import me.katze.powerantirelog.manager.PvPManager;
 import me.katze.powerantirelog.utility.PlayerUtility;
 import org.bukkit.entity.LivingEntity;
@@ -26,11 +27,17 @@ public class DamageListener implements Listener {
         if (damager == null) return;
         if (damager == target) return;
 
-        PvPManager.addPlayer(target);
-        PvPManager.addPlayer(damager);
+        if (NewbieManager.isProtected(target) || NewbieManager.isProtected(damager)) {
+            NewbieManager.notifyBlockedDamage(damager, target);
+            e.setCancelled(true);
+            return;
+        }
 
         updateScoreboard(target, damager);
         updateScoreboard(damager, target);
+
+        PvPManager.addPlayer(target);
+        PvPManager.addPlayer(damager);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -44,11 +51,17 @@ public class DamageListener implements Listener {
 
         if (damager == target) return;
 
-        PvPManager.addPlayer(target);
-        PvPManager.addPlayer(damager);
+        if (NewbieManager.isProtected(target) || NewbieManager.isProtected(damager)) {
+            NewbieManager.notifyBlockedDamage(damager, target);
+            e.setCancelled(true);
+            return;
+        }
 
         updateScoreboard(target, damager);
         updateScoreboard(damager, target);
+
+        PvPManager.addPlayer(target);
+        PvPManager.addPlayer(damager);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -59,16 +72,19 @@ public class DamageListener implements Listener {
         Player damager = (Player) e.getPotion().getShooter();
 
         for (LivingEntity target : e.getAffectedEntities()) {
-            if (target == damager) return;
+            if (target == damager) continue;
+
+            if (!(target instanceof Player)) continue;
+            if (NewbieManager.isProtected(damager) || NewbieManager.isProtected((Player) target)) continue;
 
             for (PotionEffect effect : e.getPotion().getEffects()) {
                 if (effect.getType().equals(PotionEffectType.POISON)) {
 
-                    PvPManager.addPlayer(damager);
-                    PvPManager.addPlayer((Player) target);
-
                     updateScoreboard((Player) target, damager);
                     updateScoreboard(damager, (Player) target);
+
+                    PvPManager.addPlayer(damager);
+                    PvPManager.addPlayer((Player) target);
                 }
             }
         }

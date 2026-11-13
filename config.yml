@@ -1,0 +1,130 @@
+# Автор плагина: https://t.me/tik_boost
+# Переводы плагина: https://github.com/katze225/PowerAntiRelog/tree/main/translations
+
+settings:
+  # Длительность режима PvP
+  time: 25
+
+  newbie:
+    # Защита новичков (по умолчанию отключена)
+    enabled: false
+    # Длительность защиты новичка в минутах
+    time: 60
+    # Если игрок не двигается дольше указанного времени (в секундах), таймер останавливается
+    afk-timeout: 60
+    # Как часто сохранять оставшееся время в newbie.yml (в секундах)
+    save-interval: 10
+    # Запретить новичку подбирать вещи, выпавшие из игроков после смерти
+    block-player-drops: true
+    worldguard:
+      # Регионы, в которых новичок не может ломать/ставить/использовать блоки и находиться
+      regions: []
+
+  bossbar:
+    bar: "&fРежим §x§E§3§2§6§3§6PvP &f- §x§E§3§2§6§3§6{time} сек"
+    # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
+    color: RED
+    # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
+    style: SOLID
+
+  scoreboard:
+    enabled: false
+    title: "§x§E§3§2§6§3§6PvP §fИнформация"
+    # Доступные заполнители: {attacker}, {attacker_health}, {time}
+    lines:
+      - "§x§E§3§2§6§3§6&l| &fНапал: &f{attacker}"
+      - "§x§E§3§2§6§3§6&l| &fHP: &f{attacker_health}"
+      - "§x§E§3§2§6§3§6&l| &fДо конца: &f{time} сек"
+
+  leave:
+    kill: true
+    # null или [] чтобы отключить
+    message:
+      - "&r"
+      - "§x§E§3§2§6§3§6&l| &fИгрок §x§E§3§2§6§3§6{player}, &fпокинул сервер во время PvP!"
+      - "&r"
+
+  # Что будет отключено в начале боя
+  disable:
+    fly: true
+    speed: false
+    gamemode: false
+    godmode: false
+    elytra: false
+    invisibility: false
+
+  # Какие действия нужно отменять во время боя
+  cancel:
+    interact: true
+    command: true
+    teleport: true
+    ender-chest: true
+
+  # Установите 0, чтобы отключить задержки
+  cooldown:
+    golden-apple: 0
+    enchanted-golden-apple: 0
+    ender-pearl: 0
+    chorus: 0
+    firework: 0
+    totem: 0
+    trident: 0
+    crossbow: 0
+    wind-charge: 0
+
+
+  # Работает только если cancel.command ровно true
+  command-whitelist:
+    - "msg"
+    - "m"
+    - "tell"
+    - "pm"
+
+  # Команды в начале или конце боя. Заполнители: {player}, [console], [player]. Выполняется для каждого игрока отдельно!
+  # Пример: "[console] msg {player} Удачи в бою!"
+  command-start: []
+  command-end: []
+
+  # Миры в которых плагин не будет работать
+  disabled-worlds:
+    - "duels"
+    - "duel"
+    - "exampleWorld"
+
+messages:
+  start: "§x§E§3§2§6§3§6&l| &fВы начали PvP!"
+  end: "§x§E§3§2§6§3§6&l| &aВы больше не находитесь в бою."
+  block: "§x§E§3§2§6§3§6&l| &cВы не можете делать это в режиме PvP!"
+  cooldown: "§x§E§3§2§6§3§6&l| &fПодождите §x§E§3§2§6§3§6{time}, &fчтобы использовать этот предмет!"
+
+  # Установите "", чтобы отключить
+  cooldown-subtitle: "&fПодождите §x§E§3§2§6§3§6{time}, &fчтобы использовать этот предмет!"
+
+
+  newbie:
+    actionbar: "§x§E§3§2§6§3§6&l| &fНовичок: &e{time} &7| &f/newbie disable"
+    start: "§x§E§3§2§6§3§6&l| &aВам включена защита новичка. Отключить: &f/newbie disable"
+    end: "§x§E§3§2§6§3§6&l| &cВремя защиты новичка закончилось."
+    disabled: "§x§E§3§2§6§3§6&l| &cЗащита новичка отключена."
+    enabled: "§x§E§3§2§6§3§6&l| &aЗащита новичка снова включена."
+    expired: "§x§E§3§2§6§3§6&l| &cВремя защиты новичка уже закончилось."
+    not-active: "§x§E§3§2§6§3§6&l| &cВы не находитесь под защитой новичка."
+    damage-attacker: "§x§E§3§2§6§3§6&l| &cВы под защитой новичка и не можете наносить урон игрокам."
+    damage-victim: "§x§E§3§2§6§3§6&l| &cИгрок &f{player} &cнаходится под защитой новичка."
+    block: "§x§E§3§2§6§3§6&l| &cВы не можете делать это в этом регионе."
+    region: "§x§E§3§2§6§3§6&l| &cВам нельзя находиться в этом регионе."
+    pickup: "§x§E§3§2§6§3§6&l| &cВы не можете подбирать вещи, выпавшие из игроков."
+    usage: "§x§E§3§2§6§3§6&l| &fИспользуйте: &e/newbie disable &fили &e/newbie enable"
+
+  help:
+    - "&r"
+    - "§x§E§3§2§6§3§6PowerAntiRelog:"
+    - "&7- §x§E§3§2§6§3§6/powerantirelog help &7- &fСписок команд"
+    - "&7- §x§E§3§2§6§3§6/powerantirelog reload &7- &fПерезагружает конфигурацию"
+    - "&7- §x§E§3§2§6§3§6/powerantirelog test {игрок} &7- &fВыдаёт игроку режим боя"
+    - "&7- §x§E§3§2§6§3§6/newbie disable &7- &fОтключить защиту новичка"
+    - "&7- §x§E§3§2§6§3§6/newbie enable &7- &fВключить защиту новичка"
+    - "&r"
+  reload: "§x§E§3§2§6§3§6&l| &aКонфигурация плагина была успешно перезагружена!"
+  test: "§x§E§3§2§6§3§6&l| &fВы выдали игроку §x§E§3§2§6§3§6{player} &fрежим PvP."
+  not-found: "§x§E§3§2§6§3§6&l| &cИгрок {player} не найден."

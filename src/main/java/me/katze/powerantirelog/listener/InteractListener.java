@@ -22,6 +22,14 @@ public class InteractListener implements Listener {
             return;
         }
 
+        if (e.getItem() != null && e.getItem().getType() == Material.WIND_CHARGE) {
+            if (AntiRelog.getInstance().getConfig().getBoolean("settings.cancel.interact")
+                    && block.getType().isInteractable()) {
+                e.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
+            }
+            return;
+        }
+
         if (block.getType() == Material.ENDER_CHEST) {
 
             if (AntiRelog.getInstance().getConfig().getBoolean("settings.cancel.ender-chest")) {

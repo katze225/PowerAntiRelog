@@ -2,10 +2,12 @@ package me.katze.powerantirelog;
 
 import co.aikar.commands.PaperCommandManager;
 import me.katze.powerantirelog.command.HelpCommand;
+import me.katze.powerantirelog.command.NewbieCommand;
 import me.katze.powerantirelog.command.ReloadCommand;
 import me.katze.powerantirelog.command.TestCommand;
 import me.katze.powerantirelog.listener.*;
 import me.katze.powerantirelog.manager.CooldownManager;
+import me.katze.powerantirelog.manager.NewbieManager;
 import me.katze.powerantirelog.manager.PvPManager;
 import me.katze.powerantirelog.manager.PvPScoreboardManager;
 import me.katze.powerantirelog.utility.Metrics;
@@ -26,6 +28,7 @@ public final class AntiRelog extends JavaPlugin {
     private static AntiRelog instance;
     public PvPManager pvpmanager;
     public CooldownManager cooldownManager;
+    public NewbieManager newbieManager;
     public PvPScoreboardManager scoreboardManager;
 
     @Override
@@ -40,6 +43,8 @@ public final class AntiRelog extends JavaPlugin {
         loadMetrics();
         loadConfig();
 
+        newbieManager = new NewbieManager();
+
         loadListeners();
         loadCommands();
 
@@ -50,6 +55,10 @@ public final class AntiRelog extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (newbieManager != null) {
+            NewbieManager.saveNow();
+        }
+
         if (scoreboardManager != null) {
             scoreboardManager.clearAll();
         }
@@ -61,6 +70,7 @@ public final class AntiRelog extends JavaPlugin {
         commandManager.registerCommand(new HelpCommand());
         commandManager.registerCommand(new ReloadCommand());
         commandManager.registerCommand(new TestCommand());
+        commandManager.registerCommand(new NewbieCommand());
     }
 
     private void loadListeners() {
@@ -71,6 +81,7 @@ public final class AntiRelog extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
         Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
         Bukkit.getPluginManager().registerEvents(new CooldownListener(), this);
+        Bukkit.getPluginManager().registerEvents(new NewbieListener(), this);
     }
 
     private void loadConfig() {

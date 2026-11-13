@@ -1,24 +1,20 @@
 package me.katze.powerantirelog.manager;
 
+import fr.mrmicky.fastboard.FastBoard;
 import me.katze.powerantirelog.AntiRelog;
 import me.katze.powerantirelog.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
 public class PvPScoreboardManager {
 
-    private static final String OBJECTIVE_NAME = "par_pvp";
-
     private final AntiRelog plugin;
     private final Map<UUID, UUID> attackerIds = new HashMap<>();
     private final Map<UUID, String> attackerNames = new HashMap<>();
     private final Map<UUID, Integer> attackerHealth = new HashMap<>();
-    private final Map<UUID, Scoreboard> activeBoards = new HashMap<>();
+    private final Map<UUID, FastBoard> boards = new HashMap<>();
 
     public PvPScoreboardManager(AntiRelog plugin) {
         this.plugin = plugin;
@@ -38,56 +34,38 @@ public class PvPScoreboardManager {
     }
 
     public void handleStart(Player player) {
-        if (player == null) return;
-        if (!isEnabled()) {
-            return;
-        }
+        if (player == null || !isEnabled()) return;
 
-        activeBoards.computeIfAbsent(player.getUniqueId(), uuid -> {
-            if (Bukkit.getScoreboardManager() == null) {
-                return null;
-            }
-
-            return Bukkit.getScoreboardManager().getNewScoreboard();
-        });
+        boards.computeIfAbsent(player.getUniqueId(), uuid -> new FastBoard(player));
     }
 
     public void update(Player player, int timeLeft) {
         if (player == null) return;
 
         if (!isEnabled()) {
-            if (activeBoards.containsKey(player.getUniqueId())) {
+            if (boards.containsKey(player.getUniqueId())) {
                 clear(player);
             }
             return;
         }
 
-        Scoreboard scoreboard = provideScoreboard(player);
-        if (scoreboard == null) return;
-
-        Objective objective = scoreboard.getObjective(OBJECTIVE_NAME);
-        if (objective == null) {
-            objective = scoreboard.registerNewObjective(OBJECTIVE_NAME, "dummy");
+        FastBoard board = boards.computeIfAbsent(player.getUniqueId(), uuid -> new FastBoard(player));
+        if (board.isDeleted()) {
+            board = new FastBoard(player);
+            boards.put(player.getUniqueId(), board);
         }
 
-        String title = plugin.getConfig().getString("settings.scoreboard.title", "&fPvP");
-        objective.setDisplayName(replacePlaceholders(StringUtility.getMessage(title), player, timeLeft));
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        String rawTitle = plugin.getConfig().getString("settings.scoreboard.title", "&fPvP");
+        String title = replacePlaceholders(StringUtility.getMessage(rawTitle), player, timeLeft);
+        board.updateTitle(title);
 
-        for (String entry : new HashSet<>(scoreboard.getEntries())) {
-            scoreboard.resetScores(entry);
+        List<String> rawLines = getLines();
+        List<String> lines = new ArrayList<>(rawLines.size());
+        for (String line : rawLines) {
+            lines.add(replacePlaceholders(StringUtility.getMessage(line), player, timeLeft));
         }
 
-        List<String> lines = getLines();
-        int score = lines.size();
-
-        for (int i = 0; i < lines.size(); i++) {
-            String line = replacePlaceholders(StringUtility.getMessage(lines.get(i)), player, timeLeft);
-            String uniqueLine = appendUniqueToken(line, i);
-            objective.getScore(uniqueLine).setScore(score--);
-        }
-
-        player.setScoreboard(scoreboard);
+        board.updateLines(lines);
     }
 
     public void clear(Player player) {
@@ -98,40 +76,23 @@ public class PvPScoreboardManager {
         attackerNames.remove(uuid);
         attackerHealth.remove(uuid);
 
-        Scoreboard board = activeBoards.remove(uuid);
-        if (board != null) {
-            for (String entry : new HashSet<>(board.getEntries())) {
-                board.resetScores(entry);
-            }
-            if (Bukkit.getScoreboardManager() != null) {
-                player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-            }
+        FastBoard board = boards.remove(uuid);
+        if (board != null && !board.isDeleted()) {
+            board.delete();
         }
     }
 
     public void clearAll() {
-        for (UUID uuid : new HashSet<>(activeBoards.keySet())) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null) {
-                clear(player);
-            } else {
-                activeBoards.remove(uuid);
+        for (FastBoard board : boards.values()) {
+            if (board != null && !board.isDeleted()) {
+                board.delete();
             }
         }
 
+        boards.clear();
         attackerIds.clear();
         attackerNames.clear();
         attackerHealth.clear();
-    }
-
-    private Scoreboard provideScoreboard(Player player) {
-        return activeBoards.computeIfAbsent(player.getUniqueId(), uuid -> {
-            if (Bukkit.getScoreboardManager() == null) {
-                return null;
-            }
-
-            return Bukkit.getScoreboardManager().getNewScoreboard();
-        });
     }
 
     private List<String> getLines() {
@@ -167,14 +128,5 @@ public class PvPScoreboardManager {
         return input.replace("{attacker}", name)
                 .replace("{attacker_health}", hp)
                 .replace("{time}", String.valueOf(Math.max(timeLeft, 0)));
-    }
-
-    private String appendUniqueToken(String line, int index) {
-        StringBuilder builder = new StringBuilder(line);
-        String hex = Integer.toHexString(index);
-        for (char c : hex.toCharArray()) {
-            builder.append('\u00A7').append(c);
-        }
-        return builder.toString();
     }
 }

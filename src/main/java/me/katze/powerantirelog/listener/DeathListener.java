@@ -1,5 +1,6 @@
 package me.katze.powerantirelog.listener;
 
+import me.katze.powerantirelog.manager.NewbieManager;
 import me.katze.powerantirelog.manager.PvPManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +12,10 @@ public class DeathListener implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getEntity().getPlayer();
+        if (player == null)
+            return;
+
+        NewbieManager.markPlayerDrops(e.getDrops());
 
         if (!PvPManager.isPvP(player))
             return;

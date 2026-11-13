@@ -1,0 +1,11 @@
+name: powerantirelog
+version: '1.7'
+main: me.katze.powerantirelog.AntiRelog
+api-version: '1.21'
+authors: [katze225]
+website: https://github.com/katze225/PowerAntiRelog/
+description: AntiRelog plugin for your server
+softdepend:
+  - CMI
+  - WorldGuard
+  - Essentials

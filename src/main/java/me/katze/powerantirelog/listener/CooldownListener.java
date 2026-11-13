@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
+import org.bukkit.entity.WindCharge;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -113,6 +114,17 @@ public class CooldownListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onWindChargeLaunch(ProjectileLaunchEvent e) {
+        if (e.getEntity() instanceof WindCharge && e.getEntity().getShooter() instanceof Player) {
+            Player player = (Player) e.getEntity().getShooter();
+
+            if (handleCooldown(player, Material.WIND_CHARGE)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
     private boolean handleCooldown(Player player, Material material) {
         if (!PvPManager.isPvP(player))
             return false;
@@ -130,7 +142,9 @@ public class CooldownListener implements Listener {
             long remainingTime = configTime - secondsPassed;
 
             if (secondsPassed >= configTime) {
-                CooldownManager.removePlayer(player);
+                CooldownManager.removeCooldown(player, material);
+                CooldownManager.addPlayer(player, material);
+                return false;
             } else {
                 String message = AntiRelog.getInstance().getConfig().getString("messages.cooldown")
                         .replace("{time}", String.valueOf(remainingTime));
@@ -141,16 +155,16 @@ public class CooldownListener implements Listener {
                 player.sendTitle("", StringUtility.getMessage(subtitle), 6, 40, 6);
                 return true;
             }
-        } else {
-            CooldownManager.addPlayer(player, material);
-            return false;
         }
 
+        CooldownManager.addPlayer(player, material);
         return false;
     }
 
     private int getCooldownTime(Material material) {
         switch (material) {
+            case WIND_CHARGE:
+                return AntiRelog.getInstance().getConfig().getInt("settings.cooldown.wind-charge");
             case FIREWORK_ROCKET:
                 return AntiRelog.getInstance().getConfig().getInt("settings.cooldown.firework");
             case GOLDEN_APPLE:
