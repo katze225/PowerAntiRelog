@@ -16,9 +16,10 @@ public class BossBarUtility {
 
         int maxTime = AntiRelog.getInstance().getConfig().getInt("settings.time");
 
+        String rawBar = AntiRelog.getInstance().getConfig().getString("settings.bossbar.bar", "");
+        String formattedBar = StringUtility.replacePlaceholders(player, rawBar.replace("{time}", String.valueOf(time)));
         BossBar bossBar = Bukkit.createBossBar(
-                StringUtility.getMessage(AntiRelog.getInstance().getConfig().getString("settings.bossbar.bar")
-                        .replace("{time}", String.valueOf(time))),
+                StringUtility.getMessage(formattedBar),
                 BarColor.valueOf(AntiRelog.getInstance().getConfig().getString("settings.bossbar.color")),
                 BarStyle.valueOf(AntiRelog.getInstance().getConfig().getString("settings.bossbar.style"))
         );

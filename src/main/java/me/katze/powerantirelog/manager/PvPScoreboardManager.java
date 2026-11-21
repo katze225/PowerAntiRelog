@@ -56,13 +56,15 @@ public class PvPScoreboardManager {
         }
 
         String rawTitle = plugin.getConfig().getString("settings.scoreboard.title", "&fPvP");
-        String title = replacePlaceholders(StringUtility.getMessage(rawTitle), player, timeLeft);
+        String titleWithPapi = StringUtility.replacePlaceholders(player, rawTitle);
+        String title = replacePlaceholders(StringUtility.getMessage(titleWithPapi), player, timeLeft);
         board.updateTitle(title);
 
         List<String> rawLines = getLines();
         List<String> lines = new ArrayList<>(rawLines.size());
         for (String line : rawLines) {
-            lines.add(replacePlaceholders(StringUtility.getMessage(line), player, timeLeft));
+            String lineWithPapi = StringUtility.replacePlaceholders(player, line);
+            lines.add(replacePlaceholders(StringUtility.getMessage(lineWithPapi), player, timeLeft));
         }
 
         board.updateLines(lines);
@@ -128,5 +130,30 @@ public class PvPScoreboardManager {
         return input.replace("{attacker}", name)
                 .replace("{attacker_health}", hp)
                 .replace("{time}", String.valueOf(Math.max(timeLeft, 0)));
+    }
+    public String getAttackerName(Player player) {
+        if (player == null) return "-";
+        UUID playerId = player.getUniqueId();
+        UUID attackerId = attackerIds.get(playerId);
+        if (attackerId != null) {
+            Player attacker = Bukkit.getPlayer(attackerId);
+            if (attacker != null) {
+                return attacker.getName();
+            }
+        }
+        return attackerNames.getOrDefault(playerId, "-");
+    }
+
+    public int getAttackerHealth(Player player) {
+        if (player == null) return 0;
+        UUID playerId = player.getUniqueId();
+        UUID attackerId = attackerIds.get(playerId);
+        if (attackerId != null) {
+            Player attacker = Bukkit.getPlayer(attackerId);
+            if (attacker != null) {
+                return Math.max(0, (int) Math.ceil(attacker.getHealth()));
+            }
+        }
+        return attackerHealth.getOrDefault(playerId, 0);
     }
 }

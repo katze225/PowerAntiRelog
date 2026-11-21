@@ -6,6 +6,7 @@ authors: [katze225]
 website: https://github.com/katze225/PowerAntiRelog/
 description: AntiRelog plugin for your server
 softdepend:
+  - PlaceholderAPI
   - CMI
   - WorldGuard
   - Essentials

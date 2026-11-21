@@ -84,12 +84,13 @@ public class PvPManager {
     }
 
     public static boolean isPvP(Player player) {
-        String name = player.getName();
+        if (player == null || pvpMap == null) return false;
+        return pvpMap.containsKey(player.getName());
+    }
 
-        if (pvpMap.containsKey(name)) {
-            return true;
-        }
-        return false;
+    public static int getTimeLeft(Player player) {
+        if (player == null || pvpMap == null) return 0;
+        return pvpMap.getOrDefault(player.getName(), 0);
     }
 
     public static void leave(Player player) {

@@ -21,7 +21,7 @@ public final class AntiRelog extends JavaPlugin {
     public boolean WORLDGUARD_HOOK = false;
 
     private final int PLUGIN_ID = 23642;
-    public final String VERSION = "1.6";
+    public final String VERSION = "1.7.1";
     public final String CREATOR = "https://github.com/katze225/PowerAntiRelog";
     public final String TELEGRAM_URL = "https://t.me/core2k21";
 
@@ -103,6 +103,9 @@ public final class AntiRelog extends JavaPlugin {
         }
         if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             WORLDGUARD_HOOK = true;
+        }
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new me.katze.powerantirelog.hook.PlaceholderHook(this).register();
         }
     }
 

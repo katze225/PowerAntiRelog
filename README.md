@@ -25,7 +25,7 @@ Combat logging ruins PvP: a player who is losing simply disconnects and keeps th
 - **Start/end commands** for custom integrations.
 - **Translations** included (`en`, `ru`) in [`translations/`](translations).
 - **Paper and Folia** natively supported.
-- Optional integration with **WorldGuard**, **CMI** and **Essentials**.
+- Optional integration with **WorldGuard**, **CMI**, **Essentials**, and **PlaceholderAPI**.
 
 ## Installation
 
@@ -48,6 +48,23 @@ Combat logging ruins PvP: a player who is losing simply disconnects and keeps th
 | `/newbie <enable\|disable>` | Toggle newbie protection | n/a |
 
 `powerantirelog.bypass`: the player is never put into battle mode.
+
+
+## Placeholders (PlaceholderAPI)
+
+If [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) is installed, the following placeholders are available:
+
+| Placeholder | Aliases | Description | Example Output |
+|-------------|---------|-------------|----------------|
+| `%powerantirelog_in_pvp%` | `%powerantirelog_status%` | Whether the player is currently in combat | `true` / `false` |
+| `%powerantirelog_time%` | `%powerantirelog_time_left%`, `%powerantirelog_time_seconds%` | Remaining combat time in seconds | `25` |
+| `%powerantirelog_attacker%` | `%powerantirelog_attacker_name%` | Name of the player who attacked | `Alex` (or `-`) |
+| `%powerantirelog_attacker_health%` | `%powerantirelog_attacker_hp%` | Attacker's current health | `18` |
+| `%powerantirelog_newbie%` | `%powerantirelog_newbie_protected%` | Whether the player has newbie protection active | `true` / `false` |
+| `%powerantirelog_newbie_time%` | `%powerantirelog_newbie_time_seconds%` | Remaining newbie protection in seconds | `3600` |
+| `%powerantirelog_newbie_time_formatted%` | — | Formatted remaining newbie protection time | `60:00` |
+
+*Note: All scoreboard and boss bar messages in `config.yml` also automatically parse standard PlaceholderAPI placeholders (e.g. `%player_name%`, `%vault_eco_balance%`) if PAPI is present on the server.*
 
 ## Screenshots
 

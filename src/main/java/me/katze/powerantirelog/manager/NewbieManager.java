@@ -435,4 +435,13 @@ public class NewbieManager {
         int secs = Math.max(0, seconds) % 60;
         return String.format("%02d:%02d", minutes, secs);
     }
+    public static int getTimeLeft(Player player) {
+        if (player == null) return 0;
+        NewbieData data = players.get(player.getUniqueId());
+        return (data != null && data.isEnabled()) ? data.getTimeLeft() : 0;
+    }
+
+    public static String getFormattedTimeLeft(Player player) {
+        return formatTime(getTimeLeft(player));
+    }
 }
