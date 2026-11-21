@@ -1,5 +1,7 @@
 package me.katze.powerantirelog.listener;
 
+import me.katze.powerantirelog.utility.SchedulerUtility;
+
 import io.papermc.paper.event.player.PlayerShieldDisableEvent;
 import me.katze.powerantirelog.AntiRelog;
 import me.katze.powerantirelog.manager.NewbieManager;
@@ -60,7 +62,7 @@ public class ShieldListener implements Listener {
         e.setCooldown(cooldownTicks);
 
         handledDefenders.add(defender.getUniqueId());
-        Bukkit.getScheduler().runTask(AntiRelog.getInstance(), () -> handledDefenders.remove(defender.getUniqueId()));
+        SchedulerUtility.runEntity(defender, () -> handledDefenders.remove(defender.getUniqueId()));
 
         sendEffectsAndMessages(defender, attacker, cooldownSeconds, false);
     }
@@ -103,7 +105,7 @@ public class ShieldListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTask(AntiRelog.getInstance(), () -> {
+        SchedulerUtility.runEntity(defender, () -> {
             if (!defender.isOnline()) {
                 return;
             }
@@ -121,7 +123,7 @@ public class ShieldListener implements Listener {
             defender.setCooldown(Material.SHIELD, cooldownTicks);
 
             handledDefenders.add(defender.getUniqueId());
-            Bukkit.getScheduler().runTask(AntiRelog.getInstance(), () -> handledDefenders.remove(defender.getUniqueId()));
+            SchedulerUtility.runEntity(defender, () -> handledDefenders.remove(defender.getUniqueId()));
 
             sendEffectsAndMessages(defender, attacker, cooldownSeconds, true);
         });

@@ -1,5 +1,7 @@
 package me.katze.powerantirelog.manager;
 
+import me.katze.powerantirelog.utility.SchedulerUtility;
+
 import me.katze.powerantirelog.AntiRelog;
 import me.katze.powerantirelog.data.NewbieData;
 import me.katze.powerantirelog.utility.StringUtility;
@@ -275,12 +277,7 @@ public class NewbieManager {
     }
 
     private static void startTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                tick();
-            }
-        }.runTaskTimer(AntiRelog.getInstance(), 20L, 20L);
+        SchedulerUtility.runGlobalTimer(NewbieManager::tick, 20L, 20L);
     }
 
     private static void tick() {

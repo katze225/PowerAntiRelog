@@ -1,5 +1,7 @@
 package me.katze.powerantirelog.manager;
 
+import me.katze.powerantirelog.utility.SchedulerUtility;
+
 import com.Zrips.CMI.CMI;
 import com.Zrips.CMI.Containers.CMIUser;
 import com.earth2me.essentials.Essentials;
@@ -159,12 +161,7 @@ public class PvPManager {
     }
 
     public static void startTask() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                update();
-            }
-        }.runTaskTimer(AntiRelog.getInstance(), 0L, 20L);
+        SchedulerUtility.runGlobalTimer(PvPManager::update, 0L, 20L);
     }
 
     private static void update() {

@@ -28,7 +28,7 @@ public class BossBarUtility {
 
         bossBar.addPlayer(player);
 
-        Bukkit.getScheduler().runTaskLater(AntiRelog.getInstance(), () -> {
+        SchedulerUtility.runEntityLater(player, () -> {
             bossBar.removePlayer(player);
         }, 20L);
     }
