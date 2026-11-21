@@ -80,7 +80,7 @@ The JAR is written to `target/`.
 ## Support & contact
 
 - Telegram: [@core2k21](https://t.me/core2k21)
-- Discord: `tik_ya`
+- Discord: https://discord.gg/3p6kPjezd9
 
 ## Author
 
