@@ -1,24 +1,47 @@
-# By: https://github.com/katze225
-# Support: https://discord.gg/6wGy3sYxzw
-# Language Translation: https://github.com/katze225/PowerAntiRelog/tree/main/translations
+# Plugin author: https://t.me/tik_boost
+# Plugin translations: https://github.com/katze225/PowerAntiRelog/tree/main/translations
 
 settings:
   # PvP mode duration
   time: 25
 
+  newbie:
+    # Newbie protection (disabled by default)
+    enabled: false
+    # Newbie protection duration in minutes
+    time: 60
+    # If the player does not move for longer than this time (in seconds), the timer stops
+    afk-timeout: 60
+    # How often to save the remaining time to newbie.yml (in seconds)
+    save-interval: 10
+    # Prevent newbies from picking up items dropped by players after death
+    block-player-drops: true
+    worldguard:
+      # Regions where a newbie cannot break/place/use blocks or stay
+      regions: []
+
   bossbar:
-    bar: "&fРежим §x§E§3§2§6§3§6PvP &f- §x§E§3§2§6§3§6{time} сек"
+    bar: "&fPvP mode §x§E§3§2§6§3§6- §x§E§3§2§6§3§6{time} sec"
     # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
     color: RED
     # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarStyle.html
     style: SOLID
+
+  scoreboard:
+    enabled: false
+    title: "§x§E§3§2§6§3§6PvP §fInfo"
+    # Available placeholders: {attacker}, {attacker_health}, {time}
+    lines:
+      - "§x§E§3§2§6§3§6&l| &fAttacker: &f{attacker}"
+      - "§x§E§3§2§6§3§6&l| &fHP: &f{attacker_health}"
+      - "§x§E§3§2§6§3§6&l| &fTime left: &f{time} sec"
 
   leave:
     kill: true
     # null or [] to disable
     message:
       - "&r"
-      - "§x§E§3§2§6§3§6&l| &fИгрок §x§E§3§2§6§3§6{player}, &fпокинул сервер во время PvP!"
+      - "§x§E§3§2§6§3§6&l| &fPlayer §x§E§3§2§6§3§6{player}&f left the server during PvP!"
       - "&r"
 
   # What will be disabled at the start of the battle
@@ -35,11 +58,9 @@ settings:
     interact: true
     command: true
     teleport: true
-    chorus: false
-    ender-pearl: false
     ender-chest: true
 
-  # -1 or 0 disables the delay
+  # Set to 0 to disable cooldowns
   cooldown:
     golden-apple: 0
     enchanted-golden-apple: 0
@@ -57,17 +78,22 @@ settings:
     enabled: true
     # Only work when players are in PvP mode
     pvp-only: true
-    # Cooldown duration for shield after being broken with an axe (in seconds)
+    # Shield cooldown after being broken with an axe (in seconds)
     cooldown: 5
     # Play shield break sound
     sound: true
 
-  # Only works if cancel.command is true
+  # Only works if cancel.command is exactly true
   command-whitelist:
     - "msg"
     - "m"
     - "tell"
     - "pm"
+
+  # Commands at the start or end of combat. Placeholders: {player}, [console], [player]. Runs for each player separately!
+  # Example: "[console] msg {player} Good luck in the fight!"
+  command-start: []
+  command-end: []
 
   # Worlds in which the plugin will not work
   disabled-worlds:
@@ -80,17 +106,38 @@ messages:
   end: "§x§E§3§2§6§3§6&l| &aYou are no longer in combat."
   block: "§x§E§3§2§6§3§6&l| &cYou can't do this in PvP mode!"
   cooldown: "§x§E§3§2§6§3§6&l| &fWait §x§E§3§2§6§3§6{time}, &fto use this item!"
+
+  # Set to "" to disable
+  cooldown-subtitle: "&fWait §x§E§3§2§6§3§6{time}, &fto use this item!"
+
   shield-broken: "§x§E§3§2§6§3§6&l| &fYour shield was broken by §x§E§3§2§6§3§6{player}&f!"
   shield-broken-attacker: "§x§E§3§2§6§3§6&l| &fYou broke the shield of §x§E§3§2§6§3§6{player}&f!"
   shield-broken-subtitle: "&fShield disabled for §x§E§3§2§6§3§6{time} &fsec."
+
+  newbie:
+    actionbar: "§x§E§3§2§6§3§6&l| &fNewbie: &e{time} &7| &f/newbie disable"
+    start: "§x§E§3§2§6§3§6&l| &aNewbie protection enabled. Disable: &f/newbie disable"
+    end: "§x§E§3§2§6§3§6&l| &cNewbie protection has ended."
+    disabled: "§x§E§3§2§6§3§6&l| &cNewbie protection disabled."
+    enabled: "§x§E§3§2§6§3§6&l| &aNewbie protection enabled again."
+    expired: "§x§E§3§2§6§3§6&l| &cNewbie protection has already ended."
+    not-active: "§x§E§3§2§6§3§6&l| &cYou are not under newbie protection."
+    damage-attacker: "§x§E§3§2§6§3§6&l| &cYou are under newbie protection and cannot damage players."
+    damage-victim: "§x§E§3§2§6§3§6&l| &cPlayer &f{player} &cis under newbie protection."
+    block: "§x§E§3§2§6§3§6&l| &cYou can't do this in this region."
+    region: "§x§E§3§2§6§3§6&l| &cYou are not allowed in this region."
+    pickup: "§x§E§3§2§6§3§6&l| &cYou can't pick up items dropped by players."
+    usage: "§x§E§3§2§6§3§6&l| &fUsage: &e/newbie disable &for &e/newbie enable"
 
   help:
     - "&r"
     - "§x§E§3§2§6§3§6PowerAntiRelog:"
     - "&7- §x§E§3§2§6§3§6/powerantirelog help &7- &fCommand list"
     - "&7- §x§E§3§2§6§3§6/powerantirelog reload &7- &fReloads configuration"
-    - "&7- §x§E§3§2§6§3§6/powerantirelog test {игрок} &7- &fGives the player a combat mode"
+    - "&7- §x§E§3§2§6§3§6/powerantirelog test {player} &7- &fPuts the player into combat mode"
+    - "&7- §x§E§3§2§6§3§6/newbie disable &7- &fDisable newbie protection"
+    - "&7- §x§E§3§2§6§3§6/newbie enable &7- &fEnable newbie protection"
     - "&r"
   reload: "§x§E§3§2§6§3§6&l| &aThe plugin configuration has been successfully reloaded!"
-  test: "§x§E§3§2§6§3§6&l| &fYou gave §x§E§3§2§6§3§6{player} &fplayer PvP mode."
+  test: "§x§E§3§2§6§3§6&l| &fYou put §x§E§3§2§6§3§6{player} &fin PvP mode."
   not-found: "§x§E§3§2§6§3§6&l| &cPlayer {player} was not found."
